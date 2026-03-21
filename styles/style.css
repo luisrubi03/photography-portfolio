@@ -1,0 +1,100 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8f8f8;
+}
+body {
+    margin: 0;
+    padding: 0;
+
+    /* Imagen de fondo */
+    background-image: url("Assets/fondo.jpg");
+    /* Ajustes clave */
+    background-size: cover;        /* Hace que cubra toda la pantalla */
+    background-position: center;   /* Centra la imagen */
+    background-repeat: no-repeat;  /* Evita que se repita */
+    background-attachment: fixed; /* Efecto tipo parallax (opcional) */
+
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.header {
+    width: 100%;
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+/* Navbar */
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo estilo exacto */
+.logo {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.logo-main {
+    color: #7fc7c2; /* verde agua suave */
+}
+
+.logo-light {
+    color: #555;
+    font-weight: 300;
+}
+
+/* Menú centrado */
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #777;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.2s ease;
+}
+
+/* Hover muy sutil */
+.nav-menu a:hover {
+    color: #333;
+}
+
+/* Iconos derecha */
+.nav-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-icons a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #777;
+    transition: color 0.2s ease;
+}
+
+.nav-icons a:hover {
+    color: #333;
+}
+.titulo{
+    text-align: left;
+
+}
