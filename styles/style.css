@@ -7,94 +7,153 @@
 
 body {
     font-family: "Helvetica Neue", Arial, sans-serif;
-    background-color: #f8f8f8;
+    background-color: #dddddd;
+}
+body::before {
+    content: "";
+
+    position: fixed; /* para que cubra toda la pantalla */
+    inset: 0; /* top:0 right:0 bottom:0 left:0 */
+
+    background-image: url("Assets/fondo.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    filter: blur(10px);
+    transform: scale(1.1); /* evita bordes feos */
+
+    z-index: -1; /* lo manda al fondo */
+}
+
+.fila {
+  display: flex;
+  justify-content: space-between; /* separa izquierda y derecha */
+  align-items: flex-start;
+  margin: 40px;
+  gap: 40px;
+}
+
+.contenedor-texto-1{
+    width: calc(100% - 300px);  /* deja margen lateral */
+  height: calc(100% - 80px); /* deja margen arriba/abajo */
+
+  background-color: #e8effc;
+  color: black;
+  padding: 30px;
+  border-radius: 0px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+.contenedor-texto-2{
+    width: calc(40% - 900px);  /* deja margen lateral */
+  height: calc(100% - 80px); /* deja margen arriba/abajo */
+
+position: relative;
+  background-color: #e8effc;
+  color: black;
+  padding: 20px;
+  border-radius: 0px;
+    padding-right: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+    float: right;
+    overflow: auto;
+}
+.amigos{
+    text-align: left;
 }
 body {
-    margin: 0;
-    padding: 0;
-
-    /* Imagen de fondo */
-    background-image: url("Assets/fondo.jpg");
-    /* Ajustes clave */
-    background-size: cover;        /* Hace que cubra toda la pantalla */
-    background-position: center;   /* Centra la imagen */
-    background-repeat: no-repeat;  /* Evita que se repita */
-    background-attachment: fixed; /* Efecto tipo parallax (opcional) */
-
-    font-family: Arial, sans-serif;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
-/* Header */
-.header {
-    width: 100%;
-    background: white;
-    border-bottom: 1px solid #eee;
-}
-
-/* Navbar */
+/* NAVBAR */
 .navbar {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  background: #3b2f2f; /* color oscuro como el tuyo */
+  padding: 10px 20px;
+  color: white;
 }
 
-/* Logo estilo exacto */
+/* IZQUIERDA */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .logo {
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: 1px;
+  font-weight: bold;
+  font-size: 18px;
 }
 
-.logo-main {
-    color: #7fc7c2; /* verde agua suave */
+.nav-left a {
+  text-decoration: none;
+  color: #ddd;
+  font-size: 14px;
 }
 
-.logo-light {
-    color: #555;
-    font-weight: 300;
+.nav-left a:hover {
+  color: white;
 }
 
-/* Menú centrado */
-.nav-menu {
-    list-style: none;
-    display: flex;
-    gap: 28px;
+/* DERECHA */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.nav-menu a {
-    text-decoration: none;
-    color: #777;
-    font-size: 14px;
-    font-weight: 400;
-    transition: color 0.2s ease;
+/* BUSCADOR */
+.nav-right input {
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
 }
 
-/* Hover muy sutil */
-.nav-menu a:hover {
-    color: #333;
+/* ICONOS */
+.icon {
+  cursor: pointer;
+  font-size: 16px;
 }
 
-/* Iconos derecha */
-.nav-icons {
-    display: flex;
-    gap: 15px;
+/* USUARIO */
+.user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.nav-icons a {
-    text-decoration: none;
-    font-size: 14px;
-    color: #777;
-    transition: color 0.2s ease;
+.user img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
 }
 
-.nav-icons a:hover {
-    color: #333;
+.nav-right input {
+  background: #e0e0e0;
+  border-radius: 20px;
 }
+
 .titulo{
     text-align: left;
 
+}
+.titulo-3{
+    margin-bottom: 50px;
+    float: right;
+    text-group-align: right;
+    text
+}
+.parrafo{/* esto es para seleccionar el parrafo primario despues del titulo*/
+    line-height: 25px; /*para darle interlineado al texto*/
 }
