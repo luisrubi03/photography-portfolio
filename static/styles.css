@@ -161,3 +161,66 @@ body {
 .parrafo{/* esto es para seleccionar el parrafo primario despues del titulo*/
     line-height: 25px; /*para darle interlineado al texto*/
 }
+/* CONTENEDOR PRINCIPAL */
+.contenedor-formularios {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* centra verticalmente */
+}
+
+/* CAJA DEL LOGIN */
+.formulario-1 {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* TITULO */
+.texto-formulario-1 h2 {
+    margin-bottom: 20px;
+}
+
+/* INPUTS */
+.formulario-1 input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+/* EFECTO AL HACER CLICK */
+.formulario-1 input:focus {
+    border-color: royalblue;
+}
+
+/* BOTÓN */
+.formulario-1 button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: royalblue;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* HOVER BOTÓN */
+.formulario-1 button:hover {
+    background: royalblue;
+}
+
+/* TEXTO ABAJO */
+.formulario-1 a {
+    display: block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #555;
+}

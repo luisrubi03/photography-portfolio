@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rubi Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<header class="header">
+    <nav class="navbar">
+  <div class="nav-left">
+    <span class="logo">Ruby</span>
+    <a href="#">Explorar</a>
+    <a href="#">Dolor amet</a>
+    <a href="#">Dolor amet</a>
+    <a href="#">Dolor amet</a>
+  </div>
+
+  <div class="nav-right">
+    <input type="text" placeholder="Busqueda">
+
+    <span class="icon">✉</span>
+    <span class="icon">🔔</span>
+
+    <div class="user">
+      <span>johndoe.01</span> <!-- aca seria poner una variable enlazada al flask paera que me devuelva el nombre de usuario-->
+      <img src="avatar.jpg" alt="user">
+    </div>
+  </div>
+</nav>
+</header>
+
+<div class="contenedor-formularios">
+    <div class="formulario-1">
+
+        <div class="texto-formulario-1">
+            <h2>Registrate</h2>
+        </div>
+
+        <form method="POST">
+            <input type="text" placeholder="Primer nombre" name="firstname">
+            <input type="text" placeholder="Apellido" name="lastname">
+            <input type="text" placeholder="Nombre de usuario" name="username">
+            <input type="text" placeholder="Correo" name="email">
+            <input type="password" id="password" placeholder="Contrasena" name="password">
+                <!-- oculto al inicio -->
+            <input type="password" id="confirm" placeholder="Confirmar contraseña" name="confirmation" style="display: none;">
+
+        <button type="submit">Registrarse</button>
+
+        </form>
+
+        <script>
+            const passwordInput = document.getElementById("password");
+            const confirmInput = document.getElementById("confirm");
+
+            passwordInput.addEventListener("input", function() {
+                if (passwordInput.value.length > 0) {
+                    confirmInput.style.display = "block";
+                } else {
+                    confirmInput.style.display = "none";
+                }
+            });
+        </script>
+</div>
+
+
+
+</body>
+</html>
