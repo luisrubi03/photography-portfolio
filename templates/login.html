@@ -8,27 +8,29 @@
 <body>
 
 <header class="header">
+    {% if show_navbar %}
     <nav class="navbar">
-  <div class="nav-left">
-    <span class="logo">Ruby</span>
-    <a href="#">Explorar</a>
-    <a href="#">lorem ipsum</a>
-    <a href="#">lorem ipsum</a>
-    <a href="#">lorem ipsum</a>
-  </div>
+      <div class="nav-left">
+        <span class="logo">Ruby</span>
+        <a href="#">Explorar</a>
+        <a href="#">lorem ipsum</a>
+        <a href="#">lorem ipsum</a>
+        <a href="#">lorem ipsum</a>
+      </div>
 
-  <div class="nav-right">
-    <input type="text" placeholder="Busqueda">
+      <div class="nav-right">
+        <input type="text" placeholder="Busqueda">
 
-    <span class="icon">✉</span>
-    <span class="icon">🔔</span>
+        <span class="icon">✉</span>
+        <span class="icon">🔔</span>
 
-    <div class="user">
-      <span>johndoe.01</span>
-      <img src="avatar.jpg" alt="user">
-    </div>
-  </div>
-</nav>
+        <div class="user">
+          <span>johndoe.01</span>
+          <img src="avatar.jpg" alt="user">
+        </div>
+      </div>
+    </nav>
+    {% endif %}
 </header>
 
 <div class="contenedor-formularios">

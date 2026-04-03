@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %} upload image {% endblock %}
+{% block content %}
+<body>
+<div class="contenedor-archivos">
+  <h1 class="titulo-contenedor-archivos">Crea una publicacion</h1>
+
+  <!-- Botón que abre el popup -->
+  <button onclick="abrirModal()">Sube tu fotografía</button>
+</div>
+
+<!-- Modal -->
+<div id="modalUpload" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="cerrarModal()">&times;</span>
+
+    <h2>Subir imagen</h2>
+
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+      <input type="file" name="imagen" accept="image/*" required>
+      <input type="text" name="descripcion" required>
+      <button type="submit">Subir</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function abrirModal() {
+  document.getElementById("modalUpload").style.display = "block";
+}
+
+function cerrarModal() {
+  document.getElementById("modalUpload").style.display = "none";
+}
+</script>
+</body>
+{% endblock%}
+
+{% if mensaje %}
+  <p>{{ mensaje }}</p>
+{% endif %}
