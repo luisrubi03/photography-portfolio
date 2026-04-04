@@ -1,3 +1,5 @@
+import sqlite3
+
 from flask import Flask, session, render_template, url_for, redirect, request
 import requests
 from flask_session import Session
@@ -10,17 +12,20 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 DATABASE= "users.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE
-UPLOAD_FOLDER = 'static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+app.config['UPLOAD_POSTS'] = 'static/uploads/posts'
+app.config['UPLOAD_PROFILE'] = 'static/uploads/profile_pic'
 
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
+
 
 def create_tables():
     connection= sql.connect(DATABASE)
     cur = connection.cursor()
     cur.execute(''' CREATE TABLE IF NOT EXISTS users_data(
                     user_id INTEGER PRIMARY KEY AUTOINCREMENT,firstname TEXT NOT NULL, lastname TEXT NOT NULL,username TEXT NOT NULL,
-                    email TEXT NOT NULL,password TEXT NOT NULL, creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, profile_picture TEXT NOT NULL)''')
+                    email TEXT NOT NULL,password TEXT NOT NULL, creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, profile_picture TEXT DEFAULT 'default.png')''')
     connection.close()
 
     print("Base de datos creada correctamente")
@@ -28,19 +33,20 @@ def create_tables():
 def create_posts_table():
     connection2 = sql.connect(DATABASE)
     cur2 = connection2.cursor()
-    cur2.execute(''' CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT NOT NULL, user_id INTEGER NOT NULL, username TEXT NOT NULL, date_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP NOT NULL)''')
+    cur2.execute(''' CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT NOT NULL, user_id INTEGER NOT NULL, username TEXT NOT NULL, date_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP NOT NULL, description TEXT NOT NULL)''')
     connection2.close()
+    print("tabla posts creada correctamente")
 
 @app.route("/")
 def index():
     if not session.get("username"):
         return redirect(url_for('login'))
 
-    carpeta = app.config['UPLOAD_FOLDER']
+    carpeta = app.config['UPLOAD_POSTS']
 
     connection = sql.connect(DATABASE)
     cursor = connection.cursor()
-    cursor.execute("SELECT filename, username FROM posts ORDER BY id DESC")
+    cursor.execute("SELECT filename, username, description FROM posts ORDER BY id DESC")
     posts = cursor.fetchall()
 
     posts_validos = []
@@ -66,6 +72,9 @@ def load():
 
 @app.route("/login", methods=['GET','POST'])
 def login():
+    create_tables()
+    create_posts_table()
+
     if request.method == 'POST':
         username = request.form['username'].strip()
         password = request.form['password'].strip()
@@ -108,8 +117,8 @@ def register():
             return 'La confirmacion es necesaria'
 
         #variables de formularios
-        firstname = request.form.get('firstname').strip()
-        lastname = request.form.get('lastname').strip()
+        firstname = request.form.get('firstname').strip().title()
+        lastname = request.form.get('lastname').strip().title()
         username = request.form.get('username').strip()
         email = request.form.get('email').strip()
         password = request.form.get('password').strip()
@@ -156,6 +165,9 @@ def logout():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
+    if not session.get("username"):
+        return redirect(url_for('login'))
+
     print("SESSION:", session)
 
     if request.method == 'POST':
@@ -167,22 +179,25 @@ def upload():
             return "No file"
 
         file = request.files['imagen']
+        description = request.form['descripcion']
 
+        if description == '':
+            return "deberias poner una descripcion"
         if file.filename == '':
-            return "No selected file"
+            return "Ningun archivo se ha seleccionado"
 
         filename = secure_filename(file.filename)
 
-        ruta = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        ruta = os.path.join(app.config['UPLOAD_POSTS'], filename)
         file.save(ruta)
 
         connection = sql.connect(DATABASE)
         c = connection.cursor()
         if os.path.exists(ruta):
             c.execute('''
-                      INSERT INTO posts (filename, user_id, username, date_time)
-                      VALUES (?, ?, ?, ?)
-                      ''', (filename, session["user_id"], session["username"], datetime.now()))
+                      INSERT INTO posts (filename, user_id, username, date_time, description)
+                      VALUES (?, ?, ?, ?, ?)
+                      ''', (filename, session["user_id"], session["username"], datetime.now(), description))
 
             connection.commit()
         else:
@@ -194,7 +209,83 @@ def upload():
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
-    return render_template("profile.html", show_navbar= True)
+    if not session.get("username"):
+        return redirect(url_for('login'))
+
+    connection = sql.connect(DATABASE)
+    connection.row_factory = sqlite3.Row
+    cur = connection.cursor()
+    user = cur.execute("SELECT username FROM users_data WHERE user_id = ?", (session["user_id"],)).fetchone()
+
+    connection = sql.connect(DATABASE)
+    connection.row_factory = sql.Row
+    c = connection.cursor()
+
+    c.execute("SELECT username, profile_picture FROM users_data WHERE user_id = ?", (session["user_id"],))
+    user = c.fetchone()
+
+    c.close()
+
+    # manejar default
+    profile_picture = user["profile_picture"] or "default.png"
+
+    return render_template(
+        "profile.html",
+        show_navbar=True,
+        profile_username=user["username"],
+        imagen=profile_picture
+    )
+
+@app.route("/profile/edit", methods=['GET', 'POST'])
+def profile_edit():
+    if "user_id" not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        if 'imagen' not in request.files:
+            return "No file"
+
+        file = request.files['imagen']
+
+        if file.filename == '':
+            return "Ningun archivo se ha seleccionado"
+
+        import uuid
+        filename = str(uuid.uuid4()) + "_" + secure_filename(file.filename)
+
+        os.makedirs(app.config['UPLOAD_PROFILE'], exist_ok=True)
+        ruta = os.path.join(app.config['UPLOAD_PROFILE'], filename)
+        file.save(ruta)
+
+        if not os.path.exists(ruta):
+            return "Error al guardar la imagen"
+
+        connection = sql.connect(DATABASE)
+        c = connection.cursor()
+
+        c.execute('''
+            UPDATE users_data 
+            SET profile_picture = ? 
+            WHERE user_id = ?
+        ''', (filename, session["user_id"]))
+
+        connection.commit()
+
+        return redirect(url_for('profile'))
+
+@app.context_processor
+def inject_user():
+    if "user_id" in session:
+        connection = sql.connect(DATABASE)
+        connection.row_factory = sql.Row
+        c = connection.cursor()
+
+        c.execute("SELECT username, profile_picture FROM users_data WHERE user_id = ?", (session["user_id"],))
+        user = c.fetchone()
+
+        return dict(current_user=user)
+
+    return dict(current_user=None)
 
 
 

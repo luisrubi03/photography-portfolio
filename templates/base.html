@@ -26,9 +26,9 @@
 
         <div class="user">
           <span><a class="user-text"href="{{url_for('profile')}}">{{ session.get("username") }}</a></span> <!-- aca seria poner una variable enlazada al flask paera que me devuelva el nombre de usuario-->
-          <a>
-              <img src="" alt="user">
-          </a>
+            {% if current_user %}
+            <img alt="user" src="{{ url_for('static', filename='uploads/profile_pic/' + (current_user['profile_picture'] or 'default.png')) }}">
+            {% endif %}
 
         </div>
       </div>

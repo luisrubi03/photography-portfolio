@@ -5,10 +5,43 @@
 <div class="fila3">
 <div class="contenedor-texto-3">
     <div class="contenedor-titulos3">
-        <h1 class="titulo">Prueba</h1>
+        <h1 class="titulo">¡Hola {{profile_username}}!</h1>
     </div>
+    <div>
+        <img src="{{ url_for('static', filename='uploads/profile_pic/' + imagen) }}" width="80px" height="80px">
+    </div>
+    <div>
+        <button onClick="abrirModal()" name="editar-perfil" class="editar-perfil">
+            Editar perfil
+        </button>
+    </div>
+
+    <div id="modalEditar" class="modal">
+    <div class="modal-contenido">
+        <span class="cerrar" onclick="cerrarModal()">&times;</span>
+
+        <h2>Editar perfil</h2>
+
+        <form action="{{ url_for('profile_edit') }}" method="POST" enctype="multipart/form-data">
+            <!--<input type="text" name="username" placeholder="Nuevo nombre"> para despues, editar y hacer la query con sql-->
+
+            <input type="file" name="imagen" accept="image/*">
+
+            <button type="submit">Guardar cambios</button>
+        </form>
+    </div>
+</div>
 </div>
 </div>
 </body>
 
+<script>
+    function abrirModal() {
+        document.getElementById("modalEditar").style.display = "block";
+    }
+
+    function cerrarModal() {
+        document.getElementById("modalEditar").style.display = "none";
+    }
+</script>
 {% endblock %}
