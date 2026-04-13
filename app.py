@@ -66,9 +66,10 @@ def account():
 def about():
     return render_template('about.html')
 
-@app.route("/load")
-def load():
-    return render_template('load.html')
+@app.route("/error_handler")
+def error_handler():
+    return render_template("error_handler.html", Show_navbar=True)
+
 
 @app.route("/login", methods=['GET','POST'])
 def login():
@@ -159,8 +160,9 @@ def recoverpassword():
     return render_template('recoverpassword.html')
 
 #comentario de linea: ruta de salir sesion
-@app.route("/logout")
+@app.route("/logout", methods=['POST'])
 def logout():
+    session.clear()
     return redirect(url_for('login'))
 
 @app.route("/upload", methods=['GET', 'POST'])

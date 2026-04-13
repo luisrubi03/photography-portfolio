@@ -6,9 +6,14 @@
 <div class="contenedor-texto-3">
     <div class="contenedor-titulos3">
         <h1 class="titulo">¡Hola {{profile_username}}!</h1>
+        {% if session.get("user_id") %}
+        <form action="{{ url_for('logout') }}" method="POST">
+             <button type="submit">Cerrar sesión</button>
+        </form>
+        {% endif %}
     </div>
     <div>
-        <img src="{{ url_for('static', filename='uploads/profile_pic/' + imagen) }}" width="80px" height="80px">
+        <img src="{{ url_for('static', filename='uploads/profile_pic/' + imagen) }}" style="height: 100px; width: 100px; border-radius: 50px">
     </div>
     <div>
         <button onClick="abrirModal()" name="editar-perfil" class="editar-perfil">
