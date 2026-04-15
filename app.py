@@ -290,6 +290,35 @@ def inject_user():
     return dict(current_user=None)
 
 
+@app.route("/busqueda", methods=['GET', 'POST'])
+def buscar():
+    if "user_id" in session:
+
+        if request.method == 'POST':
+            busqueda = request.form['busqueda']
+
+            connection = sql.connect(DATABASE)
+            c = connection.cursor()
+
+            c.execute("SELECT username FROM users_data WHERE username = ?", (busqueda,))
+            resultado = c.fetchone()
+
+            connection.close()
+
+            if resultado:
+                return redirect(url_for('search_profile', user=busqueda))
+
+        return render_template('busqueda.html')
+
+    return redirect(url_for('login'))  # opcional si no hay sesión
+
+
+@app.route("/<user>")
+def search_profile(user):
+    return render_template("user.html", user=user, show_navbar=True)
+
+
+
 
 if __name__ == "__main__":
     create_tables()
