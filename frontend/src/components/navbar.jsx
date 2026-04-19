@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom"
 
 function Navbar({ user }) {
+
+  const profilePic = user?.profile_picture
+    ? `/uploads/profile_pic/${user.profile_picture}`
+    : `/uploads/profile_pic/default.png`
+
+
+  console.log("este es el profilePic:", profilePic);
+
   return (
     <header className="header">
       <nav className="navbar">
@@ -34,7 +42,7 @@ function Navbar({ user }) {
             {user && (
               <img
                 alt="user"
-                src={`/static/uploads/profile_pic/${user.profile_picture}`}
+                src={profilePic}
               />
             )}
           </div>

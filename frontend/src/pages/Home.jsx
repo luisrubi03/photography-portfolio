@@ -39,7 +39,7 @@ function Home() {
                 {/* imagen */}
                 <img
                   className="upload-img"
-                  src={`/static/uploads/posts/${post.filename}`}
+                  src={`/uploads/posts/${post.filename}`}
                   alt="post"
                 />
 

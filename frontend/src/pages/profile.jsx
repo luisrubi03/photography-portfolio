@@ -1,24 +1,30 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
 
-function Profile({ username }) {
+function Profile() {
+  const [user, setUser] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [file, setFile] = useState(null)
 
-  const openModal = () => setModalOpen(true)
-  const closeModal = () => setModalOpen(false)
+  useEffect(() => {
+    fetch("http://localhost:5000/profile", {
+      credentials: "include"
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("No auth")
+        return res.json()
+      })
+      .then(data => {
+        setUser(data)
+      })
+      .catch(() => setUser(null))
+  }, [])
+
+  const profilePic = user?.profile_picture
+    ? `/profile_pic/${user.profile_picture}`
+    : `/profile_pic/default.png`
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0])
-  }
-  const profilePic =
-  username?.profile_picture
-    ? `/profile_pic/${username1.profile_picture}`
-    : `/profile_pic/default.png`
-
-  const userName = username?.user["username"]
-  if (!username){
-    userName = "John Doe"
   }
 
   const handleSubmit = async (e) => {
@@ -37,85 +43,74 @@ function Profile({ username }) {
       const data = await res.json()
 
       if (data.success) {
-        alert("Perfil actualizado")
         window.location.reload()
-      } else {
-        alert("Error al actualizar")
       }
     } catch (err) {
       console.error(err)
     }
   }
 
+  if (!user) return <p>Cargando perfil...</p>
+
   return (
     <div className="fila3">
 
       <div className="contenedor-texto-3">
 
-        <div className="contenedor-titulos3">
-          <h1 className="titulo">
-            ¡Hola {userName}!
+        <div className="contenedor-textodeperfil">
+
+          <h1 className="titulo-de-perfil">
+          ¡Hola {user.user}!
           </h1>
-
-          <button
-            onClick={() => {
-              fetch("http://localhost:5000/logout", {
-                method: "POST",
-                credentials: "include"
-              }).then(() => {
-                window.location.href = "/login"
-              })
-            }}
-          >
-            Cerrar sesión
-          </button>
-
         </div>
 
-        <div>
-          <img
-            src={profilePic}
-            style={{
-              height: "100px",
-              width: "100px",
-              borderRadius: "50px"
-            }}
-            alt="profile"
-          />
+
+        <button
+          onClick={() => {
+            fetch("http://localhost:5000/logout", {
+              method: "POST",
+              credentials: "include"
+            }).then(() => {
+              window.location.href = "/login"
+            })
+          }}
+          className="btn-logout"
+        >
+          Cerrar sesión
+        </button>
+        <div className="div-fdp">
+          <img className="fotodeperfil"
+          src={profilePic}
+          style={{
+            height: "100px",
+            width: "100px",
+            borderRadius: "50px"
+          }}
+          alt="profile"
+        />
         </div>
 
-        <div>
-          <button
-            onClick={openModal}
-            className="editar-perfil"
-          >
-            Editar perfil
-          </button>
-        </div>
 
-        {/* MODAL */}
+        <button className="btn-editarperfil" onClick={() => setModalOpen(true)}>
+          Editar perfil
+        </button>
+
         {modalOpen && (
           <div className="modal">
-            <div className="modal-contenido">
+            <div className="modal-content">
 
-              <span className="cerrar" onClick={closeModal}>
-                &times;
+              <span className="onclickmodalcierre" onClick={() => setModalOpen(false)}>
+                X
               </span>
 
-              <h2>Editar perfil</h2>
+              <form onSubmit={handleSubmit}>
+                <label className="form-label">
+                  Subir un archivo
+                  <input className="inputfile" type="file" id="inputfile1"/>
+                </label>
 
-              <form onSubmit={handleSubmit} encType="multipart/form-data">
 
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-
-                <button type="submit">
-                  Guardar cambios
-                </button>
-
+                <button type="submit">Guardar</button>
               </form>
 
             </div>
