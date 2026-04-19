@@ -1,75 +1,51 @@
 import { useEffect, useState } from "react"
 import "./App.scss"
+import { Routes, Route } from "react-router-dom"
+
+import Home from "./pages/Home"
+import Login from "./pages/Login"
+import ProtectedRoute from "./components/ProtectedRoute"
+import Layout from "./pages/Layout.jsx"
+import Profile from "./pages/profile.jsx";
+import Upload from "./pages/Upload.jsx"
 
 function App() {
-  const [showNavbar, setShowNavbar] = useState(true)
   const [user, setUser] = useState(null)
 
-  // Simulación de obtener datos del backend (Flask API)
   useEffect(() => {
-    fetch("/api/user")
-      .then(res => res.json())
-      .then(data => setUser(data))
-      .catch(() => {
-        // fallback si no hay backend aún
-        setUser({
-          username: "Ruby_user",
-          profile_picture: "default.png"
-        })
+    fetch("http://localhost:5000/api/user", {
+      credentials: "include"
+    })
+      .then(res => {
+        if (!res.ok) throw new Error()
+        return res.json()
       })
+      .then(data => setUser(data))
+      .catch(() => setUser(null))
   }, [])
 
   return (
-    <>
-      {showNavbar && (
-        <header className="header">
-          <nav className="navbar">
+    <main>
+        <div
+          className="bg-blur"
+          style={{
+            backgroundImage: "url('/assets/background1.jpg')"
+          }}
+        />
 
-            {/* LEFT */}
-            <div className="nav-left">
-              <span className="logo">
-                <a href="/">Rubi</a>
-              </span>
-              <a href="#">Explorar</a>
-              <a href="#">Amigos</a>
-              <a href="#">Mensajes</a>
-              <a href="#">Ayuda</a>
-            </div>
-
-            {/* RIGHT */}
-            <div className="nav-right">
-              <input type="text" placeholder="Busqueda" />
-
-              <span className="icon">✉</span>
-
-              <span className="upload-text">
-                <a href="/upload">subir</a>
-              </span>
-
-              <div className="user">
-                <span>
-                  <a className="user-text" href="/profile">
-                    {user?.username}
-                  </a>
-                </span>
-
-                {user && (
-                  <img
-                    alt="user"
-                    src={`/uploads/profile_pic/${user.profile_picture}`}
-                  />
-                )}
-              </div>
-            </div>
-          </nav>
-        </header>
-      )}
-
-      <main>
-        <h1>Contenido principal</h1>
-        <p>Aquí iría lo que antes ponías en {% block content %}</p>
-      </main>
-    </>
+        <div className="app-content">
+            {/* app */}
+        </div>
+      <Routes>
+           <Route element={<Layout />}>
+                <Route path="/" element={<Home />}
+                />
+               <Route path="/profile" element={<Profile />} />
+               <Route path="/upload" element={<Upload />} />
+           </Route>
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </main>
   )
 }
 
