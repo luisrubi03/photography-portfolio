@@ -3,9 +3,8 @@ import { Link } from "react-router-dom"
 function Navbar({ user }) {
 
   const profilePic = user?.profile_picture
-    ? `/uploads/profile_pic/${user.profile_picture}`
-    : `/uploads/profile_pic/default.png`
-
+    ? `http://localhost:5173/uploads/profile_pic/${user.profile_picture}`
+    : `http://localhost:5173/uploads/profile_pic/default.png`
 
   console.log("este es el profilePic:", profilePic);
 

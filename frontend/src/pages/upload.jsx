@@ -70,6 +70,8 @@ function Upload() {
             <form onSubmit={handleSubmit}>
 
               <input
+                  name="File_input"
+                  className="file-input"
                 type="file"
                 accept="image/*"
                 required
@@ -77,6 +79,8 @@ function Upload() {
               />
 
               <input
+                  name="Descripcion_input"
+                  className="file-input-descripcion"
                 type="text"
                 required
                 placeholder="Descripción"
