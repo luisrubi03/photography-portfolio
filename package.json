@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "run": "^1.5.0",
     "scss": "^0.2.4"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
