@@ -7,6 +7,7 @@ import Login from "./pages/Login"
 import Layout from "./pages/Layout.jsx"
 import Profile from "./pages/profile.jsx"
 import Upload from "./pages/Upload.jsx"
+import Search from "./pages/Search.jsx"
 
 function App() {
 
@@ -55,10 +56,25 @@ function App() {
               element={<Profile />}
             />
             <Route
+              path="/profile/:id"
+              element={<Profile />}
+              />
+
+            <Route
               path="/upload"
               element={<Upload />}
             />
+            <Route
+            path="/search"
+            element={<Search />}
+            />
+
           </Route>
+
+
+
+
+
 
           <Route
             path="/login"

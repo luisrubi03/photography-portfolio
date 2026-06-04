@@ -374,7 +374,38 @@ main {
 
 }
 
+.search-container {
+  position: relative;
+}
 
+.search-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  max-height: 300px;
+  overflow-y: auto;
+
+  z-index: 1000;
+
+  box-shadow: 0 5px 20px rgba(0,0,0,.15);
+}
+
+.search-item {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: black;
+}
+
+.search-item:hover {
+  background: #f5f5f5;
+}
 
 
 

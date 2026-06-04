@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom";
 
 function Profile() {
 
@@ -7,20 +8,27 @@ function Profile() {
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const { id } = useParams()
+  const isOwnProfile = !id
+
   // =====================================================
   // GET USER
   // =====================================================
 
   useEffect(() => {
 
-    fetch("http://localhost:5000/profile", {
+    const endpoint = id
+      ? `http://localhost:5000/profile/${id}`
+      : "http://localhost:5000/profile";
+
+    fetch(endpoint, {
       credentials: "include"
     })
 
       .then(res => {
 
         if (!res.ok) {
-          throw new Error("No autenticado")
+          throw new Error("Usuario no encontrado")
         }
 
         return res.json()
@@ -39,15 +47,19 @@ function Profile() {
         setLoading(false)
       })
 
-  }, [])
+  }, [id])
 
-//foto de perfil
+  // =====================================================
+  // FOTO PERFIL
+  // =====================================================
 
   const profilePic = user?.profile_picture
     ? `http://localhost:5173/uploads/profile_pic/${user.profile_picture}`
     : `http://localhost:5173/uploads/profile_pic/default.png`
 
-
+  // =====================================================
+  // FILE CHANGE
+  // =====================================================
 
   const handleFileChange = (e) => {
 
@@ -58,7 +70,9 @@ function Profile() {
     setFile(selectedFile)
   }
 
-//submit
+  // =====================================================
+  // SUBMIT
+  // =====================================================
 
   const handleSubmit = async (e) => {
 
@@ -93,7 +107,6 @@ function Profile() {
 
       if (data.success) {
 
-        // actualizar foto sin recargar página
         setUser(prev => ({
           ...prev,
           profile_picture: data.filename
@@ -140,7 +153,7 @@ function Profile() {
   }
 
   if (!user) {
-    return <p>No autenticado</p>
+    return <p>Usuario no encontrado</p>
   }
 
   // =====================================================
@@ -156,7 +169,9 @@ function Profile() {
         <div className="contenedor-textodeperfil">
 
           <h1 className="titulo-de-perfil">
-            ¡Hola {user.user}!
+            {isOwnProfile
+              ? `¡Hola ${user.user}!`
+              : user.user}
           </h1>
 
         </div>
@@ -179,27 +194,29 @@ function Profile() {
 
         </div>
 
-        {/* BOTÓN EDITAR */}
+        {/* BOTONES SOLO EN TU PERFIL */}
 
-        <button
-          className="btn-editarperfil"
-          onClick={() => setModalOpen(true)}
-        >
-          Editar perfil
-        </button>
+        {isOwnProfile && (
+          <>
+            <button
+              className="btn-editarperfil"
+              onClick={() => setModalOpen(true)}
+            >
+              Editar perfil
+            </button>
 
-        {/* BOTÓN LOGOUT */}
-
-        <button
-          onClick={handleLogout}
-          className="btn-logout"
-        >
-          Cerrar sesión
-        </button>
+            <button
+              onClick={handleLogout}
+              className="btn-logout"
+            >
+              Cerrar sesión
+            </button>
+          </>
+        )}
 
         {/* MODAL */}
 
-        {modalOpen && (
+        {isOwnProfile && modalOpen && (
 
           <div className="modal">
 

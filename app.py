@@ -519,6 +519,52 @@ def edit_profile():
         "filename": filename
     })
 
+from flask import request, jsonify
+
+@app.route("/buscar")
+def buscar():
+    q = request.args.get("q", "")
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT user_id, username
+        FROM users_data
+        WHERE username LIKE ?
+        LIMIT 10
+    """, (f"%{q}%",))
+
+    usuarios = cur.fetchall()
+
+    conn.close()
+
+    return jsonify([
+        dict(usuario)
+        for usuario in usuarios
+    ])
+
+@app.route("/profile/<int:user_id>")
+def profile_by_id(user_id):
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT user_id, username AS user, profile_picture
+        FROM users_data
+        WHERE id = ?
+    """, (user_id,))
+
+    usuario = cur.fetchone()
+
+    conn.close()
+
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    return jsonify(dict(usuario))
+
 if __name__ == "__main__":
 
     create_tables()
